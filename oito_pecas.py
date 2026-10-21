@@ -3,7 +3,7 @@ from collections import deque
 from heapq import heappush, heappop
 from time import perf_counter
 
-OBJETIVO = (1, 2, 3, 4, 5, 6, 7, 8, 0)  # 0 = espaco vazio
+OBJETIVO = (1, 2, 3, 4, 5, 6, 7, 8, 0) 
 POS_OBJ = {v: i for i, v in enumerate(OBJETIVO)}
 
 def vizinhos(estado):
