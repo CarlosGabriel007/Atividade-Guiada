@@ -1,11 +1,3 @@
-"""
-Atividade guiada - Aula 04: quebra-cabeca de oito pecas
-Busca gulosa e A* (h=0, pecas fora do lugar, distancia Manhattan).
-Mede custo, expansoes, reaberturas e tempo; testa admissibilidade e
-consistencia contra o custo otimo exato (BFS a partir do objetivo).
-
-Execucao: python3 oito_pecas.py   (so biblioteca padrao)
-"""
 import random
 from collections import deque
 from heapq import heappush, heappop
@@ -14,9 +6,8 @@ from time import perf_counter
 OBJETIVO = (1, 2, 3, 4, 5, 6, 7, 8, 0)  # 0 = espaco vazio
 POS_OBJ = {v: i for i, v in enumerate(OBJETIVO)}
 
-
 def vizinhos(estado):
-    """Gera (estado_filho, custo=1) movendo o espaco vazio."""
+    """Gera (estado_filho, custo=1) 
     i = estado.index(0)
     r, c = divmod(i, 3)
     for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):
@@ -27,15 +18,11 @@ def vizinhos(estado):
             lst[i], lst[j] = lst[j], lst[i]
             yield tuple(lst), 1
 
-
-# ---------------- heuristicas ----------------
 def h_zero(e):
     return 0
 
-
 def h_fora_do_lugar(e):
     return sum(1 for i, v in enumerate(e) if v != 0 and v != OBJETIVO[i])
-
 
 def h_manhattan(e):
     t = 0
@@ -45,20 +32,16 @@ def h_manhattan(e):
             t += abs(i // 3 - j // 3) + abs(i % 3 - j % 3)
     return t
 
-
 def h_dobro_manhattan(e):
     """Heuristica INADMISSIVEL de proposito: 2 x Manhattan."""
     return 2 * h_manhattan(e)
 
-
-# ---------------- algoritmos ----------------
 def reconstroi(pai, no):
     cam = [no]
     while pai[no] is not None:
         no = pai[no]
         cam.append(no)
     return cam[::-1]
-
 
 def a_estrela(inicio, h):
     """A* em grafo com atualizacao de g/predecessor (exclusao preguicosa).
@@ -88,7 +71,6 @@ def a_estrela(inicio, h):
                 heappush(fila, (ng + h(viz), cont, ng, viz))
     return None, None, expansoes, reaberturas
 
-
 def gulosa(inicio, h):
     """Busca gulosa (f = h) em grafo com lista de explorados."""
     cont = 0
@@ -111,7 +93,6 @@ def gulosa(inicio, h):
                 heappush(fila, (h(viz), cont, g + c, viz))
     return None, None, expansoes, 0
 
-
 def custo_otimo_todos():
     """h*(n) exato para os 181.440 estados alcancaveis (BFS do objetivo;
     os movimentos sao reversiveis e de custo 1)."""
@@ -125,18 +106,15 @@ def custo_otimo_todos():
                 fila.append(v)
     return dist
 
-
 def tempo_ms(func, *args, repeticoes=1):
     t0 = perf_counter()
     for _ in range(repeticoes):
         func(*args)
     return (perf_counter() - t0) / repeticoes * 1000
 
-
 def mostra(e):
     return " / ".join("".join(str(x) if x else "_" for x in e[i:i + 3])
                       for i in (0, 3, 6))
-
 
 def main():
     hstar = custo_otimo_todos()
@@ -229,7 +207,6 @@ def main():
     ini = instancias[20]
     print("  h1 =", h_fora_do_lugar(ini), "| h2 =", h_manhattan(ini),
           "| h* =", hstar[ini])
-
 
 if __name__ == "__main__":
     main()
